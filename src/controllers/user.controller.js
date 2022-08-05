@@ -52,8 +52,14 @@ const handleErrors = (err) => {
 
 const registerUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.create({ email, password });
+    const { firstName, lastName, userRole, email, password } = req.body;
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      userRole,
+      password,
+    });
     const token = createToken(user._id);
 
     res.cookie("jwt", token, {
@@ -116,12 +122,13 @@ const loginUser = async (req, res) => {
           statusCode: 200,
           message: "Logged in successfully",
           user: {
-            // firstName: user.firstName,
-            // lastName: user.lastName,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
-            // userRole: user.userRole,
-            // isTutor: user.isTutor,
-            // isAdmin: user.isAdmin,
+            userRole: user.userRole,
+            isTutor: user.isTutor,
+            isAdmin: user.isAdmin,
+            isStudent: user.isStudent,
           },
           token,
         });

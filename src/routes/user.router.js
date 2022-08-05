@@ -6,9 +6,10 @@ const {
   registerUser,
 } = require("../controllers/user.controller");
 const auth = require("../middlewares/auth");
+const { checkUserRoleData } = require("../middlewares/datavalidation");
 const router = express.Router();
 
-router.post("/api/auth/register", registerUser);
+router.post("/api/auth/register", checkUserRoleData, registerUser);
 router.post("/api/auth/login", loginUser);
 
 router.get("/api/auth", auth, getLoggedInUser);
