@@ -5,7 +5,8 @@ const { SECRET } = process.env;
 
 module.exports = (req, res, next) => {
   // get token from header
-  const token = req.header("x-auth-token");
+  const token = req.header("jwt");
+  console.log(token);
   if (!token) {
     return res
       .status(401)
@@ -16,6 +17,7 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, SECRET);
 
     req.user = decoded.user;
+    console.log(req.user);
     next();
   } catch (error) {
     res.status(401).json({ satuseCode: 401, message: "Token is invalid" });
