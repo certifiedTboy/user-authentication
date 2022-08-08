@@ -3,9 +3,9 @@ const { validationResult, check } = require("express-validator");
 const {
   loginUser,
   registerUser,
+  getManagerPage,
   getAdminPage,
-  getTutorPage,
-  getStudentPage,
+  getStaffPage,
 } = require("../controllers/user.controller");
 const auth = require("../middlewares/auth");
 const { checkUserRoleData } = require("../middlewares/datavalidation");
@@ -37,14 +37,14 @@ router.post(
 
 // admin page route
 // @access: Admin only
-router.get("/api/auth/adminpage", auth, getAdminPage);
+router.get("/api/auth/managerpage", auth, getManagerPage);
 
 // tutor page route
 // @Access Admins & tutors
-router.get("/api/auth/tutorpage", auth, getTutorPage);
+router.get("/api/auth/adminpage", auth, getAdminPage);
 
 // student page route
 //@Access Admin and Students
-router.get("/api/auth/studentpage", auth, getStudentPage);
+router.get("/api/auth/staffpage", auth, getStaffPage);
 
 module.exports = router;

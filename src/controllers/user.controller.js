@@ -102,7 +102,7 @@ const loginUser = async (req, res) => {
 };
 
 // visit admin page
-const getAdminPage = async (req, res) => {
+const getManagerPage = async (req, res) => {
   const userId = req.user.id;
   try {
     const user = await User.findById(userId).select("-password");
@@ -111,7 +111,7 @@ const getAdminPage = async (req, res) => {
       return res.status(404).json({ message: "No user found" });
     }
 
-    if (user.userRole === "student" || user.userRole === "tutor") {
+    if (user.userRole === "staff" || user.userRole === "admin") {
       return res
         .status(401)
         .json({ message: `You're not authorized to view this page` });
@@ -126,7 +126,7 @@ const getAdminPage = async (req, res) => {
 };
 
 //visit tutor page
-const getTutorPage = async (req, res) => {
+const getAdminPage = async (req, res) => {
   const userId = req.user.id;
   try {
     const user = await User.findById(userId).select("-password");
@@ -134,27 +134,21 @@ const getTutorPage = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "No user found" });
     }
-    if (user.userRole === "student") {
+    if (user.userRole === "staff") {
       return res
         .status(401)
         .json({ message: `You're not authorized to view this page` });
     }
 
-    const students = allUsers.filter(
-      (student) => student.userRole === "student"
-    );
-    console.log(students);
-
-    res
-      .status(200)
-      .json({ statusCode: 200, message: "success", user, students });
+    const staff = allUsers.filter((staff) => staff.userRole === "staff");
+    res.status(200).json({ statusCode: 200, message: "success", user, staff });
   } catch (error) {
     res.status(500).json({ error: "Server Error" });
   }
 };
 
 //visit student page
-const getStudentPage = async (req, res) => {
+const getStaffPage = async (req, res) => {
   const userId = req.user.id;
   try {
     const user = await User.findById(userId).select("-password");
@@ -172,7 +166,7 @@ const getStudentPage = async (req, res) => {
 module.exports = {
   loginUser,
   registerUser,
+  getManagerPage,
   getAdminPage,
-  getTutorPage,
-  getStudentPage,
+  getStaffPage,
 };

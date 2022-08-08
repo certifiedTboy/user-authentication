@@ -30,31 +30,31 @@ User Roles
 
 Available Roles
 
-// 1. tutor 2. student 3 admin
+// 1. Staff 2. Managers 3 Admin
 // roles are defaultly set to not assigned when not provided at registeration
 // Users are restricted on certain pages and routes based on the roles assigned
-// only admins can visit the admin page and pages of other users and can also view the details of other users
-// tutors cannot view the admin page and profile but can visit or view profile of students
-// students do not have access to other users profiles and cannot visit other users pages
+// only Managers can visit the managers page and pages of other users and can also view the details of other users
+// admins cannot view the Managers page and profile but can visit or view profile of other staff
+// staff do not have access to other users profiles and cannot visit other users pages
 
 User Roles Route
 
 // all routes under the role routes are protected with the jsonwebtoken middle
 // the generated jsonwebtoken must be passed as a header in all request as "auth-token" to view protected routes for authorized access
 
-// Admin page Route
+// Managers page Route
+http Verb = Get
+http://localhost:3000/api/auth/managerpage
+// http response = managers profile details and all available and registered users
+
+// Managers page Route
 http Verb = Get
 http://localhost:3000/api/auth/adminpage
-// http response = admin profile details and all available and registered users
+//http response = admin profile details and all registered staff
 
-// Tutor page Route
+// Staff page Route
 http Verb = Get
-http://localhost:3000/api/auth/tutorpage
-//http response = tutor profile details and all registered students
-
-// Student page Route
-http Verb = Get
-http://localhost:3000/api/auth/studentpage
-http response = Student's profile details only
+http://localhost:3000/api/auth/staffpage
+http response = Staff's profile details only
 
 below is a link to all api codes and functionalities
