@@ -27,6 +27,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// hash provided password with bcrypt
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);

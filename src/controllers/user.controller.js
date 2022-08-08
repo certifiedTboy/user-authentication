@@ -5,17 +5,21 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const { SECRET } = process.env;
 
+// register user controllers function
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
+  //check for possible password / email errors
   if (!errors.isEmpty()) {
     return res.status(400).json({ statusCode: "400", errors: errors.array() });
   }
   try {
     const { firstName, lastName, userRole, email, password } = req.body;
-    const userExist = await User.findOne({ email });
 
-    if (userExist)
+    // check if email is already taken
+    const userExist = await User.findOne({ email });
+    if (userExist) {
       return res.status(400).json({ error: "email is already taken" });
+    }
 
     const user = await User.create({
       firstName,
@@ -25,8 +29,18 @@ const registerUser = async (req, res) => {
       password,
     });
 
-    res.status(201).json({ user: user._id, created: true });
-  } catch (err) {
+    if (!user) {
+      return res
+        .status(400)
+        .json({ statusCode: 400, errror: "something went wrong" });
+    }
+
+    res.status(201).json({
+      message: "user created successfully",
+      user: { id: user._id, email: user.email },
+    });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Server Error" });
   }
 };
@@ -67,7 +81,7 @@ const loginUser = async (req, res) => {
         if (err) {
           throw err;
         }
-        res.header("jwt", token).send({
+        res.cookie("auth-token", token).send({
           statusCode: 200,
           message: "Logged in successfully",
           user: {
@@ -91,13 +105,13 @@ const loginUser = async (req, res) => {
 const getAdminPage = async (req, res) => {
   const userId = req.user.id;
   try {
-    const user = await User.findById(userId);
-    const allUsers = await User.find({});
+    const user = await User.findById(userId).select("-password");
+    const allUsers = await User.find({}).select("-password");
     if (!user) {
       return res.status(404).json({ message: "No user found" });
     }
 
-    if (user.userRole == "admin") {
+    if (user.userRole === "student" || user.userRole === "tutor") {
       return res
         .status(401)
         .json({ message: `You're not authorized to view this page` });
@@ -113,14 +127,14 @@ const getAdminPage = async (req, res) => {
 
 //visit tutor page
 const getTutorPage = async (req, res) => {
-  const { username } = req.params;
+  const userId = req.user.id;
   try {
-    const user = await User.findOne({ username });
-    const allUsers = await User.find({});
+    const user = await User.findById(userId).select("-password");
+    const allUsers = await User.find({}).select("-password");
     if (!user) {
       return res.status(400).json({ error: "No user found" });
     }
-    if (user.userRole == "tutor") {
+    if (user.userRole === "student") {
       return res
         .status(401)
         .json({ message: `You're not authorized to view this page` });
@@ -143,7 +157,7 @@ const getTutorPage = async (req, res) => {
 const getStudentPage = async (req, res) => {
   const userId = req.user.id;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("-password");
 
     if (!user) {
       return res.status(400).json({ error: "No user found" });

@@ -6,12 +6,9 @@ const checkUserRoleData = (req, res, next) => {
   if (!userRole) {
     userRole = "";
   }
-
   const convertedUserRole = userRole
     .toLowerCase()
     .replace(/(^|\s)\S/g, (L) => L.toUpperCase());
-
-  console.log(convertedUserRole);
 
   if (!userRole || userRoles.includes(convertedUserRole)) {
     next();
