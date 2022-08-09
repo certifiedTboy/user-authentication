@@ -104,6 +104,12 @@ const loginUser = async (req, res) => {
   }
 };
 
+// logout user controller function
+const logOut = (req, res) => {
+  res.clearCookie("auth-token");
+  return res.json({ message: "Signout Successfully" });
+};
+
 // reset password controller function
 const resetPasswordRequest = async (req, res) => {
   const errors = validationResult(req);
@@ -182,6 +188,7 @@ const resetPassword = async (req, res) => {
 module.exports = {
   loginUser,
   registerUser,
+  logOut,
   resetPasswordRequest,
   resetPassword,
 };

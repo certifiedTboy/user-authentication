@@ -3,6 +3,7 @@ const { validationResult, check } = require("express-validator");
 const {
   loginUser,
   registerUser,
+  logOut,
   resetPassword,
   resetPasswordRequest,
 } = require("../controllers/auth.controller");
@@ -33,6 +34,9 @@ router.post(
   ],
   loginUser
 );
+
+//user logout route
+router.get("/logout", logOut);
 
 // resetPassword request route
 router.post(
