@@ -74,4 +74,7 @@ http://localhost:3000/api/auth/resetpassword/:token
 
 // the password change data takes of body of newPassword
 
-below is a link to all api codes and functionalities
+below is a link to all api functionalities and workings
+path = /public/images
+
+https://drive.google.com/drive/folders/1kQhu_THNDVYJziEMMklkn-Cg-wGjcPMq?usp=sharing

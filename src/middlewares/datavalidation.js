@@ -1,4 +1,4 @@
-const userRoles = ["Admin", "Staff", "Managers"];
+const userRoles = ["Admin", "Staff", "Manager"];
 
 const checkUserRoleData = (req, res, next) => {
   let { userRole } = req.body;

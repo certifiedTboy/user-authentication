@@ -159,6 +159,7 @@ const resetPasswordRequest = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   //check for possible password errors
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ statusCode: "400", errors: errors.array() });
   }
