@@ -3,10 +3,9 @@ const { validationResult, check } = require("express-validator");
 const {
   loginUser,
   registerUser,
-  getManagerPage,
-  getAdminPage,
-  getStaffPage,
-} = require("../controllers/user.controller");
+  resetPassword,
+  resetPasswordRequest,
+} = require("../controllers/auth.controller");
 const auth = require("../middlewares/auth");
 const { checkUserRoleData } = require("../middlewares/datavalidation");
 const router = express.Router();
@@ -14,7 +13,7 @@ const router = express.Router();
 // user registration route
 //data validation with express validator
 router.post(
-  "/api/auth/register",
+  "/register",
 
   [
     check("email", "please enter a valid email").isEmail(),
@@ -27,7 +26,7 @@ router.post(
 // user login route
 //data validation with express validator
 router.post(
-  "/api/auth/login",
+  "/login",
   [
     check("email", "please enter a valid email").isEmail(),
     check("password", "A valid password is required").exists(),
@@ -35,16 +34,18 @@ router.post(
   loginUser
 );
 
-// admin page route
-// @access: Admin only
-router.get("/api/auth/managerpage", auth, getManagerPage);
+// resetPassword request route
+router.post(
+  "/resetpassword",
+  [check("email", "please enter a valid email").isEmail()],
+  resetPasswordRequest
+);
 
-// tutor page route
-// @Access Admins & tutors
-router.get("/api/auth/adminpage", auth, getAdminPage);
-
-// student page route
-//@Access Admin and Students
-router.get("/api/auth/staffpage", auth, getStaffPage);
+// resetPassword route
+router.post(
+  "/resetpassword/:token",
+  [check("newPassword", "A valid password is required").exists()],
+  resetPassword
+);
 
 module.exports = router;
